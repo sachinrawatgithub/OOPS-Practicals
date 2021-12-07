@@ -1,0 +1,170 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node
+{
+   int data;
+   struct node* left;
+   struct node* right;
+};
+
+struct node* new_node(int x)
+{
+   struct node* temp=(node*)malloc(sizeof(struct node));
+   temp->data=x;
+   temp->left=temp->right=NULL;
+   return temp; 
+}
+
+struct node* insert(struct node *root,int x)
+{
+   if(root==NULL)
+     {
+        root=new_node(x); 
+        return root;
+     }
+   
+   else if(root->data > x)
+     root->left=insert(root->left,x);
+   
+   else 
+     root->right=insert(root->right,x);
+     
+  return root;
+}
+
+
+
+void postorder(struct node* root)
+{
+  if(root == NULL )
+     return ;
+  
+   //printf("%d ",root->data);
+   postorder(root->left);
+   postorder(root->right); 
+   printf("%d ",root->data);    
+}
+
+
+
+void preorder(struct node* root)
+{
+  if(root == NULL )
+     return ;
+  
+   printf("%d ",root->data);
+   preorder(root->left);
+   preorder(root->right);     
+}
+
+void inorder(struct node* root)
+{
+  if(root == NULL )
+     return ;
+  
+   //printf("%d ",root->data);
+   inorder(root->left);
+   printf("%d ",root->data);
+   inorder(root->right);     
+}
+
+int findmax(struct node *root)
+{
+   if(root==NULL)
+    return root->data;
+   
+     
+   findmin(root->right);  
+
+}
+
+struct node* delete_node(struct node* root,int x)
+{
+   if(root==NULL)
+     return root;
+   
+   else if(root->data > x)
+      root->left=delete_node(root->left,x);
+   
+   else if(root->data < x)
+      root->right=delete_node(root->right,x);  
+    else
+    {
+       if( root->left==NULL && root->right==NULL)
+        {
+           struct node* temp=root;
+           free(temp);
+           root=NULL;
+           return root;
+         }
+        else if( root->left==NULL )
+          { 
+           struct node* temp=root;
+           root=root->right;
+           free(temp);
+           return root; 
+          }
+        else if( root->right==NULL )
+          { 
+           struct node* temp=root;
+           root=root->left;
+           free(temp);
+           return root; 
+          }
+         else
+         {
+         
+           int x=findmin(root); 
+           root->data=x;
+           struct node* temp=root;
+           root=delete_node(root->left,root->data);
+           return root;
+         } 
+          
+     }
+     return root; 
+     
+}
+
+
+int main()
+{
+  struct node *root= NULL;
+  
+  int n,x ;
+  printf("\nEnter the number node you want to enter in tree ");
+  scanf("%d",&n);
+   
+      
+  for(int i=0;i<n;i++)
+   {
+      int x;
+      scanf("%d",&x);
+     root=insert(root,x);
+   }  
+   
+   printf("\n Preorder traversal of tree => ");
+   preorder(root);
+   
+   printf("\n Postorder traversal of tree => ");
+   postorder(root);
+   
+   printf("\n Inorder traversal of tree => ");
+   inorder(root);
+   
+   printf("\n Enter a element to delete ");
+   scanf("%d",&x);
+   root = delete_node(root,x);
+   
+   printf("\n Preorder traversal of tree => ");
+   preorder(root);
+   
+   printf("\n Postorder traversal of tree => ");
+   postorder(root);
+   
+   printf("\n Inorder traversal of tree => ");
+   inorder(root);
+   
+      
+}
